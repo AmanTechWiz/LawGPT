@@ -1,0 +1,72 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg: #000000;
+  --color-bg-subtle: #0a0a0a;
+  --color-bg-muted: #111111;
+  --color-bg-elevated: #161616;
+  --color-border: #1e1e1e;
+  --color-border-hover: #2a2a2a;
+  --color-text: #e5e5e5;
+  --color-text-secondary: #888888;
+  --color-text-muted: #555555;
+  --color-text-bright: #ffffff;
+  --color-accent: #ffffff;
+  --color-accent-muted: rgba(255, 255, 255, 0.08);
+
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  body {
+    margin: 0;
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+.prose {
+  line-height: 1.75;
+  color: var(--color-text);
+}
+.prose p {
+  margin-bottom: 0.6em;
+}
+.prose p:last-child {
+  margin-bottom: 0;
+}
+.prose ul,
+.prose ol {
+  margin-block: 0.4em;
+  padding-inline-start: 1.25em;
+}
+.prose li {
+  margin-bottom: 0.2em;
+}
+.prose code {
+  font-size: 0.85em;
+  background: var(--color-accent-muted);
+  padding: 0.1em 0.35em;
+  border-radius: 3px;
+  font-family: var(--font-mono);
+}
+.prose strong {
+  color: var(--color-text-bright);
+  font-weight: 600;
+}
+.prose h1,
+.prose h2,
+.prose h3 {
+  color: var(--color-text-bright);
+  margin-top: 0.8em;
+  margin-bottom: 0.4em;
+  font-weight: 600;
+}

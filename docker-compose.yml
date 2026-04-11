@@ -1,0 +1,58 @@
+services:
+  rag-api:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    container_name: task_rag-api
+    environment:
+      DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD:-ragpassword}@postgres:5432/ragdb
+      REDIS_URL: redis://redis:6379
+      GROQ_API_KEY: ${GROQ_API_KEY}
+      GROQ_MODEL: ${GROQ_MODEL}
+      DEBUG: ${DEBUG:-false}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      # Dev: enables POST /session/reset (navbar button). Set false in production.
+      ALLOW_SESSION_RESET: ${ALLOW_SESSION_RESET:-true}
+    ports:
+      - "8001:8000"
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - rag-network
+
+  postgres:
+    image: pgvector/pgvector:pg15
+    container_name: task_rag-postgres-1
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-ragpassword}
+      POSTGRES_DB: ragdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./docker/postgres/postgresql.conf:/etc/postgresql/postgresql.conf
+    networks:
+      - rag-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: task_rag-redis-1
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+      - ./docker/redis/redis.conf:/usr/local/etc/redis/redis.conf
+    networks:
+      - rag-network
+
+networks:
+  rag-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  redis_data:
